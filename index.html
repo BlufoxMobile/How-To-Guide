@@ -1,221 +1,715 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Celestial Job Aid Database</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-        }
-
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .card-hover:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-        }
-        
-        .transition-all {
-            transition: all 0.2s ease-in-out;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Blufox Mobile — Internet & Mobile How-To Guide</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+body { font-family: 'Inter', sans-serif; background: #0f172a; color: #e2e8f0; }
+.hero-gradient { background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e3a5f 100%); }
+.card { background: rgba(30,41,59,0.8); border: 1px solid rgba(99,102,241,0.2); border-radius: 16px; transition: all 0.3s ease; }
+.card:hover { border-color: rgba(99,102,241,0.6); transform: translateY(-2px); box-shadow: 0 20px 40px rgba(99,102,241,0.15); }
+.tag { background: rgba(99,102,241,0.15); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.3); border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 600; display: inline-block; }
+.step-num { background: linear-gradient(135deg,#6366f1,#8b5cf6); color: white; width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+.accordion-btn { width: 100%; text-align: left; cursor: pointer; }
+.accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+.accordion-content.open { max-height: 9999px; }
+.search-bar { background: rgba(30,41,59,0.9); border: 2px solid rgba(99,102,241,0.3); border-radius: 50px; color: #e2e8f0; padding: 14px 24px 14px 52px; width: 100%; font-size: 16px; outline: none; transition: all 0.3s; }
+.search-bar:focus { border-color: #6366f1; box-shadow: 0 0 0 4px rgba(99,102,241,0.15); }
+.search-bar::placeholder { color: #64748b; }
+.cat-btn { padding: 8px 20px; border-radius: 50px; font-size: 13px; font-weight: 600; cursor: pointer; border: 2px solid transparent; transition: all 0.3s; }
+.cat-btn.active { background: #6366f1; color: white; border-color: #6366f1; }
+.cat-btn:not(.active) { background: rgba(99,102,241,0.1); color: #94a3b8; border-color: rgba(99,102,241,0.2); }
+.cat-btn:not(.active):hover { background: rgba(99,102,241,0.2); color: #c7d2fe; }
+.highlight { background: rgba(250,204,21,0.2); color: #fde047; border-radius: 3px; padding: 0 2px; }
+.copy-btn { background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); border-radius: 8px; color: #a5b4fc; padding: 4px 10px; font-size: 11px; cursor: pointer; transition: all 0.2s; }
+.copy-btn:hover { background: rgba(99,102,241,0.3); }
+.table-row:nth-child(even) { background: rgba(99,102,241,0.05); }
+.pill-green { background: rgba(34,197,94,0.15); color: #86efac; border: 1px solid rgba(34,197,94,0.3); border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
+.pill-red { background: rgba(239,68,68,0.15); color: #fca5a5; border: 1px solid rgba(239,68,68,0.3); border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
+.pill-yellow { background: rgba(234,179,8,0.15); color: #fde047; border: 1px solid rgba(234,179,8,0.3); border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
+.pill-blue { background: rgba(59,130,246,0.15); color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); border-radius: 20px; padding: 2px 10px; font-size: 11px; font-weight: 600; }
+.sticky-search { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(20px); background: rgba(15,23,42,0.9); border-bottom: 1px solid rgba(99,102,241,0.2); }
+@keyframes fadeInUp { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+.animate-in { animation: fadeInUp 0.4s ease forwards; }
+.hidden-card { display: none; }
+.no-results { display: none; }
+.no-results.show { display: block; }
+</style>
 </head>
-<body class="min-h-screen text-slate-800">
-
-    <!-- Navigation Header -->
-    <header class="bg-indigo-900 text-white py-6 shadow-lg mb-8">
-        <div class="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
-            <div class="mb-4 md:mb-0">
-                <h1 class="text-2xl font-bold tracking-tight">Celestial <span class="text-indigo-300">How-To Hub</span></h1>
-                <p class="text-indigo-200 text-sm">Employee Knowledge Repository & Search</p>
-            </div>
-            <div class="text-xs text-indigo-200 bg-indigo-800/50 px-3 py-1 rounded-full border border-indigo-700">
-                Total Resources: <span id="stats-total" class="font-bold">0</span>
-            </div>
+<body>
+<!-- HERO -->
+<div class="hero-gradient">
+  <div class="max-w-6xl mx-auto px-6 py-12">
+    <div class="flex items-center gap-3 mb-3">
+      <span class="text-3xl">📡</span>
+      <span class="text-indigo-300 text-sm font-semibold uppercase tracking-widest">Blufox Mobile</span>
+    </div>
+    <h1 class="text-4xl md:text-5xl font-black text-white mb-3 leading-tight">Internet &amp; Mobile<br><span class="text-indigo-300">Quick Reference Guide</span></h1>
+    <p class="text-slate-300 text-lg max-w-xl">Your crew's fast-access guide. Search any keyword, tap a topic, get the answer.</p>
+    <div class="flex flex-wrap gap-3 mt-6">
+      <span class="pill-blue">📱 Mobile</span>
+      <span class="pill-green">🌐 Internet</span>
+      <span class="pill-yellow">🏠 Internet Essentials</span>
+    </div>
+  </div>
+</div>
+<!-- STICKY SEARCH -->
+<div class="sticky-search py-4">
+  <div class="max-w-6xl mx-auto px-6">
+    <div class="flex flex-col md:flex-row gap-3 items-center">
+      <div class="relative flex-1 w-full">
+        <span class="absolute left-4 top-1/2 -translate-y-1/2 text-xl">🔍</span>
+        <input id="searchInput" type="text" class="search-bar" placeholder="Search: BYOD, gateway light, amnesty, escalate, return...">
+      </div>
+      <div class="flex flex-wrap gap-2">
+        <button class="cat-btn active" data-cat="all">All</button>
+        <button class="cat-btn" data-cat="mobile">📱 Mobile</button>
+        <button class="cat-btn" data-cat="internet">🌐 Internet</button>
+        <button class="cat-btn" data-cat="ie">🏠 IE</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="max-w-6xl mx-auto px-6 py-10">
+<div id="noResults" class="no-results text-center py-20">
+  <div class="text-6xl mb-4">🤷</div>
+  <h3 class="text-xl font-bold text-slate-400">No results found</h3>
+  <p class="text-slate-500 mt-2">Try a different keyword or clear the search.</p>
+</div>
+<div id="cardsGrid" class="space-y-6">
+<!-- CARD: BYOD -->
+<div class="card p-0 overflow-hidden animate-in" data-cat="mobile" data-tags="byod bring your own device sim activation imei retail360 mobile order esim psim iccid port">
+  <div class="flex items-center justify-between p-6 accordion-btn" onclick="toggleCard(this)">
+    <div class="flex items-center gap-4">
+      <div class="text-4xl">📲</div>
+      <div>
+        <div class="flex items-center gap-2 mb-1"><span class="tag">Mobile</span><span class="pill-green text-xs">BYOD</span></div>
+        <h2 class="text-xl font-bold text-white">Bring Your Own Device (BYOD) Orders</h2>
+        <p class="text-slate-400 text-sm mt-1">Process a customer's personal device activation in Retail360 — step by step</p>
+      </div>
+    </div>
+    <div class="chevron text-2xl text-indigo-400 ml-4 flex-shrink-0">▼</div>
+  </div>
+  <div class="accordion-content">
+  <div class="px-6 pb-6 border-t border-slate-700/50 pt-5">
+    <div class="grid md:grid-cols-3 gap-4 mb-6">
+      <div class="bg-slate-800/60 rounded-xl p-4 text-center">
+        <div class="text-2xl mb-2">🛠️</div>
+        <div class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Tool</div>
+        <div class="text-sm text-white font-bold mt-1">Retail360</div>
+        <div class="text-xs text-slate-500 mt-1">Retail store &amp; CoE only<br>All others use XM360</div>
+      </div>
+      <div class="bg-slate-800/60 rounded-xl p-4 text-center">
+        <div class="text-2xl mb-2">⏱️</div>
+        <div class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Billing Start</div>
+        <div class="text-sm text-white font-bold mt-1">New: on activation</div>
+        <div class="text-xs text-slate-500 mt-1">Existing: immediately on order</div>
+      </div>
+      <div class="bg-slate-800/60 rounded-xl p-4 text-center">
+        <div class="text-2xl mb-2">📅</div>
+        <div class="text-xs text-slate-400 font-semibold uppercase tracking-wide">Cancel Window</div>
+        <div class="text-sm text-white font-bold mt-1">14 Days</div>
+        <div class="text-xs text-slate-500 mt-1">No monthly charges if cancelled in time</div>
+      </div>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-4">📋 Step-by-Step</h3>
+    <div class="space-y-3">
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5">1</span><div class="text-sm text-slate-300"><strong class="text-white">Fully authenticate the customer</strong> — then log into <span class="text-indigo-300 font-semibold">Retail360</span> using their 16-digit CSG account number. Choose Driver's License as ID type.</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5">2</span><div class="text-sm text-slate-300">Scroll to the bottom → click <strong class="text-white">Launch Mobile</strong>. If they already have XM service, their account details load automatically.</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5">3</span><div class="text-sm text-slate-300">Make sure you're on the <strong class="text-white">Shop tab</strong> (Retail360 sometimes defaults to Care). Enter store info, ID type, DOB, SSN, and number of lines → <strong class="text-white">Submit</strong>.</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5">4</span><div class="text-sm text-slate-300">Click <strong class="text-white">Continue</strong> under Bring Your Own Device. Enter the device <span class="text-yellow-400 font-semibold">IMEI</span> and current carrier.</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5">5</span><div class="text-sm text-slate-300">Compatibility check runs. <span class="pill-green">Compatible</span> = you see "Good news, your device is compatible." <br><span class="pill-red">Incompatible</span> reasons: wrong tech, device locked, outdated OS, lost/stolen, already on XM.</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5">6</span><div class="text-sm text-slate-300">Choose SIM type: <strong class="text-white">eSIM</strong> (auto-selected for capable devices) or <strong class="text-white">pSIM</strong> (enter the ICCID — typically starts with 89148).</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5">7</span><div class="text-sm text-slate-300">Pick data plan → keep or port existing number → enter device nickname → <strong class="text-white">Submit</strong>.</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5">8</span><div class="text-sm text-slate-300">Review Cart Summary with customer → <strong class="text-white">Continue to Checkout</strong>. Enter billing address, credit card, email, contact info.</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5">9</span><div class="text-sm text-slate-300">Send Customer Agreement: Try <span class="text-green-400 font-semibold">Text</span> first → <span class="text-blue-400 font-semibold">Email</span> if text fails → <span class="text-yellow-400 font-semibold">Verbal/DocuSign</span> if both fail.</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5">10</span><div class="text-sm text-slate-300">Read T&C script verbatim → get agreement → click <strong class="text-white">Place Order</strong>. ✅</div></div>
+    </div>
+    <div class="mt-6 bg-amber-950/40 border border-amber-700/40 rounded-xl p-4">
+      <div class="text-amber-400 font-bold text-sm mb-2">⚠️ Key Rules</div>
+      <ul class="text-sm text-slate-300 space-y-1">
+        <li>• When adding a new line: auth with <strong class="text-white">last 4 of credit card</strong> (SSN alone won't cut it)</li>
+        <li>• <strong class="text-white">Never</strong> enter DOB/SSN for anyone other than the primary account holder</li>
+        <li>• Smartwatch &amp; tablet BYODs go through XM360/Retail360 or XOE</li>
+      </ul>
+    </div>
+    <div class="mt-4 flex justify-end"><a href="https://celestial.cable.comcast.com/knowledge/article-info?query=200826155424511" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">📎 Full Article ↗</a></div>
+  </div>
+  </div>
+</div>
+<!-- CARD: RETURNS & EXCHANGES -->
+<div class="card p-0 overflow-hidden animate-in" data-cat="mobile" data-tags="return exchange rma mobile device swap refund terminal buyers remorse warranty byod 14 days restocking">
+  <div class="flex items-center justify-between p-6 accordion-btn" onclick="toggleCard(this)">
+    <div class="flex items-center gap-4">
+      <div class="text-4xl">🔄</div>
+      <div>
+        <div class="flex items-center gap-2 mb-1"><span class="tag">Mobile</span><span class="pill-yellow text-xs">Returns</span></div>
+        <h2 class="text-xl font-bold text-white">Mobile Returns &amp; Exchanges</h2>
+        <p class="text-slate-400 text-sm mt-1">How to process a device return or swap in XM360 — with the right RMA type</p>
+      </div>
+    </div>
+    <div class="chevron text-2xl text-indigo-400 ml-4 flex-shrink-0">▼</div>
+  </div>
+  <div class="accordion-content">
+  <div class="px-6 pb-6 border-t border-slate-700/50 pt-5">
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div class="bg-slate-800/60 rounded-xl p-4">
+        <div class="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">⏰ Time Window</div>
+        <div class="text-2xl font-black text-white">14 Days</div>
+        <div class="text-xs text-slate-400 mt-1">From delivery or in-store purchase</div>
+      </div>
+      <div class="bg-slate-800/60 rounded-xl p-4">
+        <div class="text-xs text-slate-400 font-semibold uppercase tracking-wide mb-2">💰 Restocking Fee</div>
+        <div class="text-2xl font-black text-white">$35</div>
+        <div class="text-xs text-slate-400 mt-1">Waived if customer is deceased</div>
+      </div>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-3">🎯 Pick the Right Return Type</h3>
+    <div class="overflow-x-auto rounded-xl border border-slate-700/50 mb-6">
+      <table class="w-full text-sm">
+        <thead><tr class="bg-indigo-900/40"><th class="text-left p-3 text-indigo-300 font-semibold">Type</th><th class="text-left p-3 text-indigo-300 font-semibold">Use When</th></tr></thead>
+        <tbody>
+          <tr class="table-row"><td class="p-3 font-bold text-white">Terminal Return</td><td class="p-3 text-slate-300">Customer wants to <span class="text-red-400">return device AND cancel their line</span></td></tr>
+          <tr class="table-row"><td class="p-3 font-bold text-white">Buyer's Remorse Exchange</td><td class="p-3 text-slate-300">Keeps line, wants a <span class="text-yellow-400">different financed device (DPP)</span></td></tr>
+          <tr class="table-row"><td class="p-3 font-bold text-white">BYOD Exchange</td><td class="p-3 text-slate-300">Keeps line, wants to swap for <span class="text-green-400">their own paid-off device</span></td></tr>
+          <tr class="table-row"><td class="p-3 font-bold text-white">Warranty Exchange</td><td class="p-3 text-slate-300">Device is <span class="text-blue-400">defective (not damaged)</span> — within 14 days only</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-3">✅ Before You Start</h3>
+    <div class="space-y-2 mb-5">
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-indigo-400 font-bold">→</span><div>Only <strong class="text-white">Account Holder, Primary, or Manager</strong> Xfinity ID can do returns/exchanges</div></div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-indigo-400 font-bold">→</span><div>Search account in XM360 → Lines of Service → confirm <strong class="text-white">MDN and IMEI</strong> (use Qelp tool)</div></div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-indigo-400 font-bold">→</span><div>Run diagnostics + ITG in Einstein 360 to confirm exchange eligibility</div></div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-indigo-400 font-bold">→</span><div>Device must have <strong class="text-white">no damage</strong> — liquid, jailbreak, unauthorized repairs = fees may apply</div></div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-indigo-400 font-bold">→</span><div>Ask customer to <strong class="text-white">remove personal data</strong>. Apple: <span class="text-red-400 font-bold">Find My must be OFF</span></div></div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4">
+      <div>
+        <h3 class="text-green-400 font-bold text-sm uppercase tracking-wider mb-3">📦 Process a Return</h3>
+        <div class="space-y-2">
+          <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#16a34a,#15803d)">1</span><div class="text-sm text-slate-300">XM360 → <strong class="text-white">Orders &amp; Returns</strong> → <strong class="text-white">Start a return or exchange</strong></div></div>
+          <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#16a34a,#15803d)">2</span><div class="text-sm text-slate-300">Pick device → Continue (one item per return)</div></div>
+          <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#16a34a,#15803d)">3</span><div class="text-sm text-slate-300">Select Return Type &amp; Return Reason → Next</div></div>
+          <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#16a34a,#15803d)">4</span><div class="text-sm text-slate-300">Answer condition questions → Continue → Review Return Summary</div></div>
+          <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#16a34a,#15803d)">5</span><div class="text-sm text-slate-300"><strong class="text-white">Submit return</strong> — tell customer refunds take <span class="text-yellow-400 font-bold">3–5 business days</span></div></div>
         </div>
-    </header>
-
-    <main class="container mx-auto px-4 pb-20">
-        
-        <!-- Search and Filter Section -->
-        <div class="glass-panel p-6 rounded-2xl shadow-sm mb-8 sticky top-4 z-10 border-t-4 border-indigo-500">
-            <div class="grid grid-cols-1 lg:grid-cols-4 gap-4">
-                <!-- Search Input -->
-                <div class="lg:col-span-2 relative">
-                    <input type="text" id="searchInput" placeholder="Type issue or keyword (e.g. 'BYOD', 'RDK', 'Refund')..." 
-                           class="w-full pl-12 pr-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition-all shadow-sm">
-                    <div class="absolute left-4 top-3.5 text-slate-400">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                        </svg>
-                    </div>
-                </div>
-
-                <!-- Category Filter -->
-                <div>
-                    <select id="categoryFilter" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm transition-all appearance-none cursor-pointer">
-                        <option value="all">All Categories</option>
-                        <option value="Authentication & Policy">Authentication & Policy</option>
-                        <option value="Billing & Payments">Billing & Payments</option>
-                        <option value="Tools & Order Entry">Tools & Order Entry</option>
-                        <option value="Troubleshooting">Troubleshooting</option>
-                        <option value="Mobile">Mobile</option>
-                        <option value="Internet & Hardware">Internet & Hardware</option>
-                        <option value="Internet Essentials">Internet Essentials</option>
-                        <option value="Training & Skills">Training & Skills</option>
-                    </select>
-                </div>
-
-                <!-- Sort Order -->
-                <div>
-                    <select id="sortFilter" class="w-full px-4 py-3 bg-white border border-slate-200 rounded-xl focus:ring-2 focus:ring-indigo-500 outline-none shadow-sm transition-all appearance-none cursor-pointer">
-                        <option value="newest">Latest Updates</option>
-                        <option value="az">A-Z Title</option>
-                    </select>
-                </div>
-            </div>
+      </div>
+      <div>
+        <h3 class="text-blue-400 font-bold text-sm uppercase tracking-wider mb-3">🔁 Process an Exchange</h3>
+        <div class="space-y-2">
+          <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)">1</span><div class="text-sm text-slate-300">Same flow as return through Step 3</div></div>
+          <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)">2</span><div class="text-sm text-slate-300">Care only: send iGuard link for customer's DOB &amp; SSN (expires in 5 min)</div></div>
+          <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)">3</span><div class="text-sm text-slate-300">Answer condition questions → Continue → <strong class="text-white">Order review</strong></div></div>
+          <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)">4</span><div class="text-sm text-slate-300">Review Due today, next bill, monthly estimate with customer</div></div>
+          <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)">5</span><div class="text-sm text-slate-300">Get agreement → <strong class="text-white">Submit</strong> ✅</div></div>
         </div>
+      </div>
+    </div>
+    <div class="mt-5 bg-amber-950/40 border border-amber-700/40 rounded-xl p-4">
+      <div class="text-amber-400 font-bold text-sm mb-2">⚠️ Important Rules</div>
+      <ul class="text-sm text-slate-300 space-y-1">
+        <li>• Devices bought or delivered <strong class="text-white">more than 60 days ago</strong> are NOT eligible</li>
+        <li>• If device is on a deactivated line → <strong class="text-white">activate it first</strong> before starting RMA</li>
+        <li>• Trade-in device cannot be recovered once shipped</li>
+      </ul>
+    </div>
+    <div class="mt-4 flex justify-end"><a href="https://celestial.cable.comcast.com/knowledge/article-info?query=200826155423404" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">📎 Full Article ↗</a></div>
+  </div>
+  </div>
+</div>
+<!-- CARD: ELITE UPGRADE -->
+<div class="card p-0 overflow-hidden animate-in" data-cat="mobile" data-tags="elite upgrade early upgrade premium unlimited dpp trade-in byod pif device upgrade mobile credits 36 month">
+  <div class="flex items-center justify-between p-6 accordion-btn" onclick="toggleCard(this)">
+    <div class="flex items-center gap-4">
+      <div class="text-4xl">⭐</div>
+      <div>
+        <div class="flex items-center gap-2 mb-1"><span class="tag">Mobile</span><span class="pill-blue text-xs">Upgrades</span></div>
+        <h2 class="text-xl font-bold text-white">Elite Upgrade Program</h2>
+        <p class="text-slate-400 text-sm mt-1">Premium Unlimited customers can upgrade their device up to 2x per year — here's how</p>
+      </div>
+    </div>
+    <div class="chevron text-2xl text-indigo-400 ml-4 flex-shrink-0">▼</div>
+  </div>
+  <div class="accordion-content">
+  <div class="px-6 pb-6 border-t border-slate-700/50 pt-5">
+    <div class="grid md:grid-cols-3 gap-3 mb-6">
+      <div class="bg-slate-800/60 rounded-xl p-4 text-center">
+        <div class="text-2xl mb-1">📱</div>
+        <div class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Eligible Plan</div>
+        <div class="text-sm text-white font-bold mt-1">Premium Unlimited only</div>
+      </div>
+      <div class="bg-slate-800/60 rounded-xl p-4 text-center">
+        <div class="text-2xl mb-1">🔁</div>
+        <div class="text-xs text-slate-400 uppercase tracking-wide font-semibold">How Often</div>
+        <div class="text-sm text-white font-bold mt-1">2x per year</div>
+        <div class="text-xs text-slate-500 mt-1">60-day wait between upgrades</div>
+      </div>
+      <div class="bg-slate-800/60 rounded-xl p-4 text-center">
+        <div class="text-2xl mb-1">⏳</div>
+        <div class="text-xs text-slate-400 uppercase tracking-wide font-semibold">Trade-in Wait</div>
+        <div class="text-sm text-white font-bold mt-1">2 full billing cycles</div>
+        <div class="text-xs text-slate-500 mt-1">Under Premium Unlimited plan</div>
+      </div>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-3">💡 Three Upgrade Types</h3>
+    <div class="space-y-3 mb-6">
+      <div class="bg-slate-800/40 border border-indigo-500/30 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-2"><span class="pill-blue">DPP Elite Upgrade</span><span class="text-white font-bold text-sm">$400 off over 36 months</span></div>
+        <p class="text-sm text-slate-300">Trade in your <strong class="text-white">financed device early</strong>. Remaining DPP balance gets wiped. You start a new 36-month DPP. Device must be Grade A or B.</p>
+        <p class="text-xs text-slate-500 mt-1">✅ Stackable with service deals &nbsp; ❌ Cannot stack with other device deals</p>
+      </div>
+      <div class="bg-slate-800/40 border border-green-500/30 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-2"><span class="pill-green">BYOD/PIF Elite Upgrade</span><span class="text-white font-bold text-sm">$400 off over 36 months</span></div>
+        <p class="text-sm text-slate-300"><strong class="text-white">No trade-in required.</strong> Customer keeps old device and buys a new one on DPP. Great for customers who want to keep their current phone.</p>
+        <p class="text-xs text-slate-500 mt-1">✅ Stackable with service deals (unlimited line plans)</p>
+      </div>
+      <div class="bg-slate-800/40 border border-yellow-500/30 rounded-xl p-4">
+        <div class="flex items-center gap-2 mb-2"><span class="pill-yellow">TIPs Elite Upgrade</span><span class="text-white font-bold text-sm">Up to $830 off over 36 months</span></div>
+        <p class="text-sm text-slate-300">Trade in a <strong class="text-white">fully paid-off device</strong> (BYO or PIF). Device doesn't need to be on an existing line. Trade-in value varies by make/model.</p>
+        <p class="text-xs text-slate-500 mt-1">❌ Cannot stack with other device deals</p>
+      </div>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-3">💬 Common Scenarios — What to Say</h3>
+    <div class="space-y-3 mb-5">
+      <div class="bg-slate-800/40 rounded-xl p-4">
+        <div class="text-xs font-bold text-slate-400 uppercase mb-1">📞 Customer on Premium Unlimited with 12+ months left on DPP</div>
+        <div class="text-sm text-green-300 italic">"Great news — with Premium Unlimited you can upgrade your device twice every 12 months. Your current payments get wiped and you get a discount off a new device!"</div>
+      </div>
+      <div class="bg-slate-800/40 rounded-xl p-4">
+        <div class="text-xs font-bold text-slate-400 uppercase mb-1">📞 Customer on Unlimited (not Premium) wants to upgrade</div>
+        <div class="text-sm text-green-300 italic">"Have you heard about our Premium Unlimited plan? For just $10 more per month you get more data, more security, and Elite Upgrade — which lets you upgrade your device twice a year!"</div>
+      </div>
+      <div class="bg-slate-800/40 rounded-xl p-4">
+        <div class="text-xs font-bold text-slate-400 uppercase mb-1">📞 Customer worried about paying off old device</div>
+        <div class="text-sm text-green-300 italic">"Once you trade in your current device with Elite Upgrade, you're no longer responsible for those payments. You only owe on your new device — which even comes at a discounted rate!"</div>
+      </div>
+    </div>
+    <div class="bg-slate-800/40 border border-slate-600/40 rounded-xl p-4 mb-4">
+      <div class="text-sm font-bold text-white mb-2">🔮 Early Upgrade (for Unlimited plan customers)</div>
+      <ul class="text-sm text-slate-300 space-y-1">
+        <li>• Can upgrade once <strong class="text-white">50% of device balance is paid</strong></li>
+        <li>• One-time fee required (waived if enrolled in XMC)</li>
+        <li>• As of March 5, 2026: tablets and watches are now eligible too</li>
+      </ul>
+    </div>
+    <div class="bg-amber-950/40 border border-amber-700/40 rounded-xl p-4">
+      <div class="text-amber-400 font-bold text-sm mb-2">⚠️ Credits get forfeited if...</div>
+      <p class="text-sm text-slate-300">Customer <strong class="text-white">downgrades from Premium Unlimited</strong> or <strong class="text-white">disconnects services</strong> — any remaining Elite Upgrade monthly credits are gone.</p>
+    </div>
+    <div class="mt-4 flex justify-end"><a href="https://celestial.cable.comcast.com/knowledge/article-info?query=250403165714650" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">📎 Full Article ↗</a></div>
+  </div>
+  </div>
+</div>
+<!-- CARD: ESCALATION -->
+<div class="card p-0 overflow-hidden animate-in" data-cat="mobile" data-tags="escalate escalation mobile xm coe xm360 ecm ticket credit refund line transfer deactivate activation error porting">
+  <div class="flex items-center justify-between p-6 accordion-btn" onclick="toggleCard(this)">
+    <div class="flex items-center gap-4">
+      <div class="text-4xl">🚨</div>
+      <div>
+        <div class="flex items-center gap-2 mb-1"><span class="tag">Mobile</span><span class="pill-red text-xs">Escalations</span></div>
+        <h2 class="text-xl font-bold text-white">Mobile Escalation Paths</h2>
+        <p class="text-slate-400 text-sm mt-1">Who to call, what queue to use, and when to escalate further</p>
+      </div>
+    </div>
+    <div class="chevron text-2xl text-indigo-400 ml-4 flex-shrink-0">▼</div>
+  </div>
+  <div class="accordion-content">
+  <div class="px-6 pb-6 border-t border-slate-700/50 pt-5">
+    <div class="bg-indigo-900/30 border border-indigo-500/30 rounded-xl p-4 mb-5">
+      <div class="text-indigo-300 font-bold text-sm mb-1">🥇 Golden Rule</div>
+      <div class="text-white font-semibold">Always try to resolve in XM360 first before escalating.</div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4 mb-6">
+      <div class="bg-slate-800/60 rounded-xl p-4">
+        <div class="text-green-400 font-bold mb-2">📞 XM CoE (90% of retail escalations)</div>
+        <div class="text-2xl font-black text-white mb-3">1-866-461-0805</div>
+        <ul class="text-sm text-slate-300 space-y-1">
+          <li>✓ Credits &amp; refunds</li>
+          <li>✓ Line transfer complications</li>
+          <li>✓ Deactivating a line or account</li>
+          <li>✓ DPP reallocation on RMAs</li>
+        </ul>
+      </div>
+      <div class="bg-slate-800/60 rounded-xl p-4">
+        <div class="text-blue-400 font-bold mb-2">📞 Comcast Business Mobile CoE</div>
+        <div class="text-2xl font-black text-white mb-3">1-844-963-0210</div>
+        <ul class="text-sm text-slate-300 space-y-1">
+          <li>✓ Business mobile accounts</li>
+          <li>✓ Business mobile escalations</li>
+        </ul>
+      </div>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-3">📋 ECM Ticket Drop-Downs (Get it right the first time!)</h3>
+    <div class="overflow-x-auto rounded-xl border border-slate-700/50 mb-5">
+      <table class="w-full text-sm">
+        <thead><tr class="bg-indigo-900/40"><th class="text-left p-3 text-indigo-300 font-semibold">Issue</th><th class="text-left p-3 text-indigo-300 font-semibold">1st Drop-Down</th><th class="text-left p-3 text-indigo-300 font-semibold">2nd Drop-Down</th></tr></thead>
+        <tbody>
+          <tr class="table-row"><td class="p-3 text-white">Activation error / port-in</td><td class="p-3 text-slate-300">Activation/Porting</td><td class="p-3 text-slate-400">Activation Error</td></tr>
+          <tr class="table-row"><td class="p-3 text-white">Service or data issue</td><td class="p-3 text-slate-300">Connectivity and Network Features</td><td class="p-3 text-slate-400">Call/Message/Data</td></tr>
+          <tr class="table-row"><td class="p-3 text-white">Add-on (hotspot, travel pass)</td><td class="p-3 text-slate-300">Connectivity and Network Features</td><td class="p-3 text-slate-400">Features</td></tr>
+          <tr class="table-row"><td class="p-3 text-white">Promo fallout</td><td class="p-3 text-slate-300">Plan/Price/Promotion</td><td class="p-3 text-slate-400">Promotion Support</td></tr>
+          <tr class="table-row"><td class="p-3 text-white">Price protection</td><td class="p-3 text-slate-300">Plan/Price/Promotion</td><td class="p-3 text-slate-400">Price Protection</td></tr>
+          <tr class="table-row"><td class="p-3 text-white">Order entry errors / GUID</td><td class="p-3 text-slate-300">XM360 Issues</td><td class="p-3 text-slate-400">Accessing XM360</td></tr>
+          <tr class="table-row"><td class="p-3 text-white">SIM / MDN swap / stuck orders</td><td class="p-3 text-slate-300">XM360 Issues</td><td class="p-3 text-slate-400">Order Entry/Action NA</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="mt-4 flex justify-end"><a href="https://celestial.cable.comcast.com/knowledge/article-info?query=250311160002673" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">📎 Full Article ↗</a></div>
+  </div>
+  </div>
+</div>
+<!-- CARD: GATEWAY LIGHTS -->
+<div class="card p-0 overflow-hidden animate-in" data-cat="internet" data-tags="gateway light modem blink color red white blue purple internet hardware xfinity gateway status">
+  <div class="flex items-center justify-between p-6 accordion-btn" onclick="toggleCard(this)">
+    <div class="flex items-center gap-4">
+      <div class="text-4xl">💡</div>
+      <div>
+        <div class="flex items-center gap-2 mb-1"><span class="tag" style="background:rgba(16,185,129,0.15);color:#6ee7b7;border-color:rgba(16,185,129,0.3)">Internet</span></div>
+        <h2 class="text-xl font-bold text-white">Gateway Light Status Guide</h2>
+        <p class="text-slate-400 text-sm mt-1">What every LED color on the Xfinity modem/gateway means</p>
+      </div>
+    </div>
+    <div class="chevron text-2xl text-indigo-400 ml-4 flex-shrink-0">▼</div>
+  </div>
+  <div class="accordion-content">
+  <div class="px-6 pb-6 border-t border-slate-700/50 pt-5">
+    <div class="space-y-3 mb-5">
+      <div class="flex items-center gap-4 bg-slate-800/60 rounded-xl p-4">
+        <div class="w-12 h-12 rounded-full bg-slate-700 border-2 border-slate-600 flex items-center justify-center text-slate-400 text-xl flex-shrink-0">○</div>
+        <div><div class="font-bold text-white">No Light</div><div class="text-sm text-slate-400">Gateway is OFF — check the power cable</div></div>
+      </div>
+      <div class="flex items-center gap-4 bg-slate-800/60 rounded-xl p-4">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(255,255,255,0.15);border:2px solid rgba(255,255,255,0.5)">●</div>
+        <div><div class="font-bold text-white">White Steady</div><div class="text-sm text-slate-400"><span class="pill-green">All Good ✅</span> — Operational after activation. Nothing to do.</div></div>
+      </div>
+      <div class="flex items-center gap-4 bg-slate-800/60 rounded-xl p-4">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(255,255,255,0.1);border:2px dashed rgba(255,255,255,0.4)">◌</div>
+        <div><div class="font-bold text-white">White Blinking (during activation)</div><div class="text-sm text-slate-400"><span class="pill-yellow">Limited Operation</span> — Follow the Getting Started guide to activate.</div></div>
+      </div>
+      <div class="flex items-center gap-4 bg-slate-800/60 rounded-xl p-4">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(239,68,68,0.3);border:2px solid rgba(239,68,68,0.8)">●</div>
+        <div><div class="font-bold text-white">Red Steady</div><div class="text-sm text-slate-400"><span class="pill-red">No Internet ❌</span> — We can't connect to your device. Call Xfinity support.</div></div>
+      </div>
+      <div class="flex items-center gap-4 bg-slate-800/60 rounded-xl p-4">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0" style="background:rgba(59,130,246,0.2);border:2px dashed rgba(59,130,246,0.7)">◌</div>
+        <div><div class="font-bold text-white">Blue Blinking</div><div class="text-sm text-slate-400"><span class="pill-blue">WPS Mode</span> — Gateway is pairing with a wireless device. Wait for it to finish.</div></div>
+      </div>
+      <div class="flex items-center gap-4 bg-slate-800/60 rounded-xl p-4">
+        <div class="w-12 h-12 rounded-full flex items-center justify-center text-xl flex-shrink-0" style="background:linear-gradient(135deg,rgba(168,85,247,0.3),rgba(236,72,153,0.3));border:2px dashed rgba(168,85,247,0.7)">◌</div>
+        <div><div class="font-bold text-white">Any Other Color Combo</div><div class="text-sm text-slate-400"><span class="pill-yellow">Connecting to Xfinity</span> — Wait up to 15 minutes. Still issues? Call support.</div></div>
+      </div>
+    </div>
+    <div class="bg-indigo-900/30 border border-indigo-500/30 rounded-xl p-4">
+      <div class="text-indigo-300 font-bold text-sm mb-1">💡 Quick Fix Tip</div>
+      <div class="text-sm text-slate-300">Download the <strong class="text-white">Xfinity app</strong> — fastest way to troubleshoot, check outages, and reach 24/7 support.</div>
+    </div>
+    <div class="mt-4 flex justify-end"><a href="https://celestial.cable.comcast.com/knowledge/article-info?query=200826155424250" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">📎 Full Article ↗</a></div>
+  </div>
+  </div>
+</div>
+<!-- CARD: RESIN -->
+<div class="card p-0 overflow-hidden animate-in" data-cat="internet" data-tags="resin escalation internet email portal advanced troubleshooting tier 3 dovecot email recovery deleted folder resync">
+  <div class="flex items-center justify-between p-6 accordion-btn" onclick="toggleCard(this)">
+    <div class="flex items-center gap-4">
+      <div class="text-4xl">🖥️</div>
+      <div>
+        <div class="flex items-center gap-2 mb-1"><span class="tag" style="background:rgba(16,185,129,0.15);color:#6ee7b7;border-color:rgba(16,185,129,0.3)">Internet</span><span class="pill-red text-xs">Tier 3 Only</span></div>
+        <h2 class="text-xl font-bold text-white">RESIN Escalation — Email Issues</h2>
+        <p class="text-slate-400 text-sm mt-1">For Advanced Troubleshooting Tier 3 agents only — email portal errors &amp; recovery tools</p>
+      </div>
+    </div>
+    <div class="chevron text-2xl text-indigo-400 ml-4 flex-shrink-0">▼</div>
+  </div>
+  <div class="accordion-content">
+  <div class="px-6 pb-6 border-t border-slate-700/50 pt-5">
+    <div class="bg-red-950/30 border border-red-700/40 rounded-xl p-4 mb-5">
+      <div class="text-red-400 font-bold text-sm mb-1">🔒 Access Restriction</div>
+      <div class="text-sm text-slate-300">This escalation path is for <strong class="text-white">Tier 3 Advanced Troubleshooting agents only</strong>. If you're not Tier 3, this is not your tool to use — escalate to Tier 3 first.</div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4 mb-5">
+      <div class="bg-slate-800/60 rounded-xl p-4">
+        <div class="text-xs text-slate-400 font-semibold uppercase mb-2">When to use RESIN</div>
+        <ul class="text-sm text-slate-300 space-y-1">
+          <li>• Errors in Xfinity email portal</li>
+          <li>• Address book or Preferences tab errors</li>
+          <li>• Some Voice &amp; Text Messaging issues</li>
+          <li>• After all other troubleshooting is done</li>
+        </ul>
+      </div>
+      <div class="bg-slate-800/60 rounded-xl p-4">
+        <div class="text-xs text-slate-400 font-semibold uppercase mb-2">Login</div>
+        <div class="text-sm text-white font-bold">NT → RESIN portal</div>
+        <div class="mt-3 text-xs text-slate-400 font-semibold uppercase mb-1">Backend Settings</div>
+        <div class="text-sm text-slate-300">Cstpop3deleteoption → <strong class="text-yellow-400">Keep</strong><br>Webmail (cstuiflag) → <strong class="text-yellow-400">OX</strong><br>Backend (cstbackendflag) → <strong class="text-yellow-400">DOVECOT</strong></div>
+      </div>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-3">🔧 Dovecot Tools</h3>
+    <div class="space-y-3">
+      <div class="bg-slate-800/40 rounded-xl p-4">
+        <div class="font-bold text-white text-sm mb-1">🗑️ Dovecot Dumpster</div>
+        <div class="text-sm text-slate-300">Recovers deleted emails from trash — up to <strong class="text-yellow-400">15 days</strong> back. Customer can also do this from their inbox by clicking the trash menu.</div>
+      </div>
+      <div class="bg-slate-800/40 rounded-xl p-4">
+        <div class="font-bold text-white text-sm mb-1">📒 Dovecot User Contacts Lookup</div>
+        <div class="text-sm text-slate-300">View customer's address book including groups. <strong class="text-red-400">Read-only</strong> — no edits can be made, but useful for catching typos in contact groups.</div>
+      </div>
+      <div class="bg-slate-800/40 rounded-xl p-4">
+        <div class="font-bold text-white text-sm mb-1">📁 Dovecot View Folder</div>
+        <div class="text-sm text-slate-300">See folder hierarchy, email count, folder size, and dumpster contents. Use this first to confirm if there are recoverable emails.</div>
+      </div>
+      <div class="bg-slate-800/40 rounded-xl p-4">
+        <div class="font-bold text-white text-sm mb-1">🔄 Dovecot Force Resync</div>
+        <div class="text-sm text-slate-300">Fixes login issues, missing folders, and misc errors. Takes <strong class="text-yellow-400">up to 2 hours</strong> after submission. If escalation is still needed, follow CS ticket (IOP) process.</div>
+      </div>
+    </div>
+    <div class="mt-4 flex justify-end"><a href="https://celestial.cable.comcast.com/knowledge/article-info?query=200826155421804" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">📎 Full Article ↗</a></div>
+  </div>
+  </div>
+</div>
+<!-- CARD: IE APPLY -->
+<div class="card p-0 overflow-hidden animate-in" data-cat="ie" data-tags="internet essentials apply low income affordable ie plus application eligibility poverty snap medicaid housing assistance qualify">
+  <div class="flex items-center justify-between p-6 accordion-btn" onclick="toggleCard(this)">
+    <div class="flex items-center gap-4">
+      <div class="text-4xl">🏠</div>
+      <div>
+        <div class="flex items-center gap-2 mb-1"><span class="tag" style="background:rgba(234,179,8,0.15);color:#fde047;border-color:rgba(234,179,8,0.3)">Internet Essentials</span></div>
+        <h2 class="text-xl font-bold text-white">Apply for Internet Essentials (IE / IE+)</h2>
+        <p class="text-slate-400 text-sm mt-1">Affordable internet for low-income households — eligibility, pricing, and how to apply</p>
+      </div>
+    </div>
+    <div class="chevron text-2xl text-indigo-400 ml-4 flex-shrink-0">▼</div>
+  </div>
+  <div class="accordion-content">
+  <div class="px-6 pb-6 border-t border-slate-700/50 pt-5">
+    <div class="grid md:grid-cols-2 gap-4 mb-5">
+      <div class="bg-slate-800/60 rounded-xl p-4 border border-green-500/20">
+        <div class="text-green-400 font-bold mb-2">🌐 Internet Essentials</div>
+        <div class="text-3xl font-black text-white">$14.95<span class="text-slate-400 text-base font-normal">/mo</span></div>
+        <div class="text-sm text-slate-400 mt-1">75/10 Mbps • No activation fee • No equipment rental</div>
+      </div>
+      <div class="bg-slate-800/60 rounded-xl p-4 border border-blue-500/20">
+        <div class="text-blue-400 font-bold mb-2">🚀 Internet Essentials Plus</div>
+        <div class="text-3xl font-black text-white">$29.95<span class="text-slate-400 text-base font-normal">/mo</span></div>
+        <div class="text-sm text-slate-400 mt-1">100/20 Mbps • No activation fee • No equipment rental</div>
+      </div>
+    </div>
+    <div class="bg-slate-800/40 rounded-xl p-4 mb-5">
+      <div class="text-sm font-bold text-white mb-2">📦 What's Included</div>
+      <div class="grid grid-cols-2 gap-2 text-sm text-slate-300">
+        <div>✓ Free wireless gateway (WiFi included)</div>
+        <div>✓ Access to Xfinity WiFi hotspots</div>
+        <div>✓ Free internet training resources</div>
+        <div>✓ Option to buy laptop for $149.99 + tax</div>
+      </div>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-3">✅ Eligibility Requirements (ALL must be met)</h3>
+    <div class="space-y-2 mb-5">
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-green-400">✓</span>Lives in an Xfinity service area</div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-green-400">✓</span>Enrolled in SNAP, Medicaid, SSI, NSLP, housing assistance, or other qualifying programs — <strong class="text-white">OR</strong> income at/below 200% Federal Poverty Level</div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-green-400">✓</span><strong class="text-white">Has NOT had Xfinity Internet in the last 90 days</strong></div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-green-400">✓</span>No outstanding Xfinity debt less than 1 year old</div>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-3">💰 Income Limits (200% Federal Poverty Level)</h3>
+    <div class="overflow-x-auto rounded-xl border border-slate-700/50 mb-5">
+      <table class="w-full text-sm">
+        <thead><tr class="bg-indigo-900/40"><th class="text-left p-3 text-indigo-300 font-semibold">Household Size</th><th class="text-left p-3 text-indigo-300 font-semibold">Max Annual Income</th></tr></thead>
+        <tbody>
+          <tr class="table-row"><td class="p-3 text-white">1</td><td class="p-3 text-slate-300">$31,920</td></tr>
+          <tr class="table-row"><td class="p-3 text-white">2</td><td class="p-3 text-slate-300">$43,280</td></tr>
+          <tr class="table-row"><td class="p-3 text-white">3</td><td class="p-3 text-slate-300">$54,640</td></tr>
+          <tr class="table-row"><td class="p-3 text-white">4</td><td class="p-3 text-slate-300">$66,000</td></tr>
+          <tr class="table-row"><td class="p-3 text-white">5</td><td class="p-3 text-slate-300">$77,360</td></tr>
+          <tr class="table-row"><td class="p-3 text-white">6+</td><td class="p-3 text-slate-300">$88,720 (+$11,360 per additional person)</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-3">📋 How to Apply — 4 Steps</h3>
+    <div class="space-y-3">
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#f59e0b,#d97706)">1</span><div class="text-sm text-slate-300"><strong class="text-white">Qualify</strong> — Confirm eligibility using the criteria above.</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#f59e0b,#d97706)">2</span><div class="text-sm text-slate-300"><strong class="text-white">Apply online</strong> at <a href="https://internetessentials.com" target="_blank" class="text-indigo-400 underline">internetessentials.com</a> or call <strong>1-855-846-8376</strong>. Spanish: es.internetessentials.com. Other languages: use browser translation or call 1-844-389-4681.</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#f59e0b,#d97706)">3</span><div class="text-sm text-slate-300"><strong class="text-white">Get approved</strong> — Xfinity reviews and notifies via text, email, or mail. Upload docs at apply.internetessentials.com/uploadonreturn if needed.</div></div>
+      <div class="flex gap-3 items-start"><span class="step-num mt-0.5" style="background:linear-gradient(135deg,#f59e0b,#d97706)">4</span><div class="text-sm text-slate-300"><strong class="text-white">Get online</strong> — Internet active in 5–7 business days. Schedule install or pick up a Getting Started kit at a retail store.</div></div>
+    </div>
+    <div class="mt-4 flex justify-end"><a href="https://celestial.cable.comcast.com/knowledge/article-info?query=200826155425902" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">📎 Full Article ↗</a></div>
+  </div>
+  </div>
+</div>
+<!-- CARD: IEPP -->
+<div class="card p-0 overflow-hidden animate-in" data-cat="ie" data-tags="iepp internet essentials partnership program sponsor school nonprofit sponsorship code funded ie">
+  <div class="flex items-center justify-between p-6 accordion-btn" onclick="toggleCard(this)">
+    <div class="flex items-center gap-4">
+      <div class="text-4xl">🤝</div>
+      <div>
+        <div class="flex items-center gap-2 mb-1"><span class="tag" style="background:rgba(234,179,8,0.15);color:#fde047;border-color:rgba(234,179,8,0.3)">Internet Essentials</span><span class="pill-blue text-xs">IEPP</span></div>
+        <h2 class="text-xl font-bold text-white">IE Partnership Program (IEPP)</h2>
+        <p class="text-slate-400 text-sm mt-1">When a school, non-profit, or community org is sponsoring a customer's internet</p>
+      </div>
+    </div>
+    <div class="chevron text-2xl text-indigo-400 ml-4 flex-shrink-0">▼</div>
+  </div>
+  <div class="accordion-content">
+  <div class="px-6 pb-6 border-t border-slate-700/50 pt-5">
+    <div class="bg-indigo-900/30 border border-indigo-500/30 rounded-xl p-4 mb-5">
+      <div class="text-sm text-white font-semibold">How it works:</div>
+      <div class="text-sm text-slate-300 mt-1">A sponsor (school, non-profit, healthcare org, etc.) gives the customer a <strong class="text-yellow-400">sponsorship code</strong>. The sponsor pays the IE monthly charge so the customer's bill shows <strong class="text-green-400">$0.00</strong> for internet.</div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4 mb-5">
+      <div class="bg-slate-800/60 rounded-xl p-4">
+        <div class="text-sm font-bold text-white mb-2">✅ What the sponsor covers</div>
+        <div class="text-sm text-slate-300">IE ($14.95) or IE Plus ($29.95) internet only.<br>Customer pays $0 for internet while sponsored.</div>
+      </div>
+      <div class="bg-slate-800/60 rounded-xl p-4">
+        <div class="text-sm font-bold text-white mb-2">❌ What the sponsor doesn't cover</div>
+        <div class="text-sm text-slate-300">Xfinity Mobile, TV, or any other services. Customer pays for those separately.</div>
+      </div>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-3">👨‍💼 Agent Notes</h3>
+    <div class="space-y-2 mb-5">
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-indigo-400 font-bold">→</span><div>Customer with sponsorship code: apply at <strong class="text-white">internetessentials.com</strong> or transfer to IE New Sales in OneCTI</div></div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-indigo-400 font-bold">→</span><div>Customer with code gets error during application: <strong class="text-white">transfer to IE New Sales destination in OneCTI</strong></div></div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-red-400 font-bold">⚠️</span><div><strong class="text-white">Never give IE New Sales number to customers without a sponsorship code</strong></div></div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-indigo-400 font-bold">→</span><div>Customer has code but blocked due to bad debt: call <strong class="text-white">1-844-963-0178</strong> (Tier 2 can override). Then email <span class="text-indigo-300">BOS-Collections-Escalations@comcast.com</span> for an "upgrade hold"</div></div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-indigo-400 font-bold">→</span><div>Existing Xfinity Internet customers can also switch to IEPP if they have a valid sponsorship code</div></div>
+    </div>
+    <div class="bg-amber-950/40 border border-amber-700/40 rounded-xl p-4">
+      <div class="text-amber-400 font-bold text-sm mb-2">⚠️ Non-Payment Note</div>
+      <div class="text-sm text-slate-300">If the account is shut off for non-payment, <strong class="text-white">IE service is also disconnected</strong>. Customer must bring account current to reconnect IE.</div>
+    </div>
+    <div class="mt-4 flex justify-end"><a href="https://celestial.cable.comcast.com/knowledge/article-info?query=200826155449496" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">📎 Full Article ↗</a></div>
+  </div>
+  </div>
+</div>
+<!-- CARD: IE AMNESTY -->
+<div class="card p-0 overflow-hidden animate-in" data-cat="ie" data-tags="amnesty internet essentials past due debt forgive old balance forgiven qualify ie program">
+  <div class="flex items-center justify-between p-6 accordion-btn" onclick="toggleCard(this)">
+    <div class="flex items-center gap-4">
+      <div class="text-4xl">🕊️</div>
+      <div>
+        <div class="flex items-center gap-2 mb-1"><span class="tag" style="background:rgba(234,179,8,0.15);color:#fde047;border-color:rgba(234,179,8,0.3)">Internet Essentials</span><span class="pill-green text-xs">Amnesty</span></div>
+        <h2 class="text-xl font-bold text-white">IE Amnesty Program</h2>
+        <p class="text-slate-400 text-sm mt-1">Old Xfinity debt can be forgiven so low-income customers can qualify for IE</p>
+      </div>
+    </div>
+    <div class="chevron text-2xl text-indigo-400 ml-4 flex-shrink-0">▼</div>
+  </div>
+  <div class="accordion-content">
+  <div class="px-6 pb-6 border-t border-slate-700/50 pt-5">
+    <div class="bg-green-950/30 border border-green-700/40 rounded-xl p-4 mb-5">
+      <div class="text-green-400 font-bold text-sm mb-1">💚 The Deal</div>
+      <div class="text-sm text-slate-300">If a customer meets IE eligibility requirements but has old Xfinity debt that's <strong class="text-white">more than 1 year old</strong>, that debt can be completely <strong class="text-green-400">forgiven</strong> so they can get internet service.</div>
+    </div>
+    <div class="grid md:grid-cols-2 gap-4 mb-5">
+      <div>
+        <h3 class="text-green-400 font-bold text-sm uppercase tracking-wider mb-2">✅ Requirements to Qualify</h3>
+        <ul class="text-sm text-slate-300 space-y-2">
+          <li>• Debt must be <strong class="text-white">more than 1 year old</strong> (based on final disconnection date)</li>
+          <li>• Customer must be the <strong class="text-white">owner of the past debt</strong></li>
+          <li>• Must meet all other IE eligibility requirements</li>
+          <li>• No max debt amount — <strong class="text-green-400">any amount qualifies</strong></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="text-red-400 font-bold text-sm uppercase tracking-wider mb-2">❌ Doesn't Apply To</h3>
+        <ul class="text-sm text-slate-300 space-y-2">
+          <li>• <strong class="text-white">Xfinity Mobile debt</strong> — cannot be forgiven</li>
+          <li>• Debt less than 1 year old (still in active collections)</li>
+          <li>• Customers who already received amnesty once</li>
+        </ul>
+      </div>
+    </div>
+    <h3 class="text-indigo-300 font-bold text-sm uppercase tracking-wider mb-3">📋 What Happens After Amnesty</h3>
+    <div class="space-y-2 mb-5">
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-green-400">✓</span>Debt is forgiven — collections agencies are notified to stop contact</div>
+      <div class="flex gap-3 text-sm text-slate-300"><span class="text-green-400">✓</span>Customer gets an IE account if they meet all other qualifications</div>
+      <div class="flex gap-3 text-sm text-red-400"><span>⚠️</span>Customer <strong class="text-red-400">cannot upgrade or add services for 1 year</strong></div>
+      <div class="flex gap-3 text-sm text-red-400"><span>⚠️</span>Amnesty is a <strong class="text-red-400">one-time deal</strong> — no second amnesty if they fall behind again</div>
+    </div>
+    <div class="bg-slate-800/60 rounded-xl p-4">
+      <div class="text-sm font-bold text-white mb-2">👁️ How to spot an amnesty account</div>
+      <div class="text-sm text-slate-300">A <strong class="text-yellow-400">CRE pop-up</strong> will appear when you access the account showing the date the amnesty expires.</div>
+    </div>
+    <div class="mt-4 flex justify-end"><a href="https://celestial.cable.comcast.com/knowledge/article-info?query=200826155447742" target="_blank" class="text-indigo-400 hover:text-indigo-300 text-sm font-semibold flex items-center gap-1">📎 Full Article ↗</a></div>
+  </div>
+  </div>
+</div>
+</div><!-- end cardsGrid -->
+</div><!-- end container -->
 
-        <!-- Results Grid -->
-        <div id="resultsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Dynamic Content Here -->
-        </div>
+<!-- FOOTER -->
+<footer class="border-t border-slate-700/50 py-8 mt-10">
+  <div class="max-w-6xl mx-auto px-6 text-center">
+    <div class="text-2xl mb-2">📡</div>
+    <div class="text-slate-400 text-sm">Blufox Mobile — Internet &amp; Mobile Quick Reference Guide</div>
+    <div class="text-slate-600 text-xs mt-1">Built for the crew. Ctrl+F or use the search above to find anything fast.</div>
+  </div>
+</footer>
 
-        <!-- Empty State -->
-        <div id="noResults" class="hidden text-center py-20">
-            <div class="text-slate-300 mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.172 9.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-            </div>
-            <h3 class="text-xl font-semibold text-slate-600">No matching job aids found</h3>
-            <p class="text-slate-500">Try adjusting your search terms or category filter.</p>
-        </div>
-    </main>
+<script>
+function toggleCard(btn) {
+  var content = btn.nextElementSibling;
+  var chevron = btn.querySelector('.chevron');
+  var isOpen = content.classList.contains('open');
+  content.classList.toggle('open', !isOpen);
+  chevron.style.transform = isOpen ? '' : 'rotate(180deg)';
+  chevron.style.transition = 'transform 0.3s ease';
+}
 
-    <script>
-        // Database of compiled links
-        const jobAids = [
-            // AUTHENTICATION & POLICY
-            { title: "Account Authentication in Einstein 360", category: "Authentication & Policy", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155422561", tags: ["verify", "id", "customer", "security"] },
-            { title: "Authentication for Chat Agents — Mercury Help", category: "Authentication & Policy", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155424170", tags: ["chat", "verify", "agent"] },
-            { title: "Comcast Identity Verification Policy (REG)", category: "Authentication & Policy", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=241111105932107", tags: ["rules", "sop", "identification"] },
-            { title: "Acceptable Forms of Identification Policy", category: "Authentication & Policy", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155444577", tags: ["id", "dl", "passport", "policy"] },
-            
-            // BILLING & PAYMENTS
-            { title: "Identify Paperless Billing Status — Einstein 360", category: "Billing & Payments", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155422942", tags: ["eco", "paperless", "billing", "check"] },
-            { title: "Automatic Payments & Paperless Discount (APPD)", category: "Billing & Payments", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=230410115751510", tags: ["autopay", "discount", "savings"] },
-            { title: "How to Move Your Due Date", category: "Billing & Payments", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155424100", tags: ["date", "payment", "reschedule"] },
-            { title: "Completing Cash Confirmation Process", category: "Billing & Payments", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=260126092053687", tags: ["pos", "money", "register", "close"] },
-            { title: "Payment Restrictions Process Overview", category: "Billing & Payments", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=230419121827530", tags: ["denied", "check", "credit"] },
+var searchInput = document.getElementById('searchInput');
+var catBtns = document.querySelectorAll('.cat-btn');
+var cardsGrid = document.getElementById('cardsGrid');
+var noResults = document.getElementById('noResults');
+var allCards = Array.from(document.querySelectorAll('#cardsGrid > .card'));
+var currentCat = 'all';
 
-            // TOOLS & ORDER ENTRY
-            { title: "Celestial Point of Sale (POS) Overview", category: "Tools & Order Entry", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=251009140641363", tags: ["register", "checkout", "transaction"] },
-            { title: "CSG System and Macro IDs Reference", category: "Tools & Order Entry", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=210628134341427", tags: ["csg", "codes", "macros", "shortcut"] },
-            { title: "Xfinity Home Security Order Entry — CSG", category: "Tools & Order Entry", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155424814", tags: ["security", "order", "home"] },
-            { title: "Address Build Tool (ABT) Guide", category: "Tools & Order Entry", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155423004", tags: ["abt", "missing", "location", "construction"] },
-            { title: "Cancel NOW Internet — Einstein 360", category: "Tools & Order Entry", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=250428145818197", tags: ["cancel", "disconnect", "now"] },
-            
-            // TROUBLESHOOTING
-            { title: "RDK-03004 - Trouble Connecting", category: "Troubleshooting", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155419309", tags: ["error", "code", "tv", "connect"] },
-            { title: "XRE-03121 - Something went wrong", category: "Troubleshooting", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155419888", tags: ["error", "code", "tv", "fix"] },
-            { title: "Gateway Light Status Guide", category: "Troubleshooting", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155424250", tags: ["modem", "lights", "blink", "color"] },
-            { title: "RESIN Escalation Path (Advanced Internet)", category: "Troubleshooting", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155421804", tags: ["advanced", "ticket", "internet", "escalate"] },
-            
-            // MOBILE
-            { title: "Process BYOD Orders in Retail360", category: "Mobile", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155424511", tags: ["mobile", "bring", "sim", "activation"] },
-            { title: "Xfinity Mobile Escalation Guidebook", category: "Mobile", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=250311160002673", tags: ["mobile", "help", "escalate"] },
-            { title: "Mobile Returns & Exchanges Step-by-Step", category: "Mobile", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155423404", tags: ["return", "rma", "swap", "mobile"] },
-            { title: "Elite Upgrade Program Details", category: "Mobile", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=250403165714650", tags: ["early", "upgrade", "mobile", "deal"] },
-            
-            // INTERNET ESSENTIALS
-            { title: "Apply for Internet Essentials / IE Plus", category: "Internet Essentials", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155425902", tags: ["ie", "low income", "apply"] },
-            { title: "IE Partnership Program (IEPP) Overview", category: "Internet Essentials", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155449496", tags: ["sponsor", "school", "ie"] },
-            { title: "IE Amnesty Program Policy", category: "Internet Essentials", link: "https://celestial.cable.comcast.com/knowledge/article-info?query=200826155447742", tags: ["debt", "past due", "amnesty"] }
-        ];
+function filterCards() {
+  var q = searchInput.value.toLowerCase().trim();
+  var shown = 0;
+  allCards.forEach(function(card) {
+    var cat = card.getAttribute('data-cat');
+    var tags = card.getAttribute('data-tags') || '';
+    var title = card.querySelector('h2') ? card.querySelector('h2').textContent.toLowerCase() : '';
+    var desc = card.querySelector('p') ? card.querySelector('p').textContent.toLowerCase() : '';
+    var catMatch = currentCat === 'all' || cat === currentCat;
+    var searchMatch = !q || tags.includes(q) || title.includes(q) || desc.includes(q);
+    if (catMatch && searchMatch) {
+      card.classList.remove('hidden-card');
+      shown++;
+    } else {
+      card.classList.add('hidden-card');
+    }
+  });
+  noResults.classList.toggle('show', shown === 0);
+}
 
-        const searchInput = document.getElementById('searchInput');
-        const categoryFilter = document.getElementById('categoryFilter');
-        const sortFilter = document.getElementById('sortFilter');
-        const resultsGrid = document.getElementById('resultsGrid');
-        const noResults = document.getElementById('noResults');
-        const totalStats = document.getElementById('stats-total');
+catBtns.forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    catBtns.forEach(function(b) { b.classList.remove('active'); });
+    btn.classList.add('active');
+    currentCat = btn.getAttribute('data-cat');
+    filterCards();
+  });
+});
 
-        function renderResults() {
-            const searchTerm = searchInput.value.toLowerCase();
-            const selectedCategory = categoryFilter.value;
-            const sortBy = sortFilter.value;
+searchInput.addEventListener('input', filterCards);
 
-            // Filter logic
-            let filtered = jobAids.filter(aid => {
-                const matchesSearch = aid.title.toLowerCase().includes(searchTerm) || 
-                                     aid.tags.some(tag => tag.includes(searchTerm));
-                const matchesCategory = selectedCategory === 'all' || aid.category === selectedCategory;
-                return matchesSearch && matchesCategory;
-            });
-
-            // Sort logic
-            if (sortBy === 'az') {
-                filtered.sort((a, b) => a.title.localeCompare(b.title));
-            } else {
-                // Default to newest (represented by order in original array for this mock)
-                filtered.reverse();
-            }
-
-            // Update Stats
-            totalStats.innerText = filtered.length;
-
-            // UI Rendering
-            resultsGrid.innerHTML = '';
-            
-            if (filtered.length === 0) {
-                noResults.classList.remove('hidden');
-            } else {
-                noResults.classList.add('hidden');
-                filtered.forEach(aid => {
-                    const card = document.createElement('div');
-                    card.className = 'glass-panel p-5 rounded-xl transition-all card-hover flex flex-col justify-between';
-                    
-                    card.innerHTML = `
-                        <div>
-                            <div class="flex justify-between items-start mb-3">
-                                <span class="text-[10px] font-bold uppercase tracking-widest text-indigo-600 bg-indigo-50 px-2 py-1 rounded">
-                                    ${aid.category}
-                                </span>
-                            </div>
-                            <h3 class="font-bold text-slate-800 text-lg leading-tight mb-2">${aid.title}</h3>
-                            <div class="flex flex-wrap gap-1 mb-4">
-                                ${aid.tags.map(tag => `<span class="text-[9px] bg-slate-100 text-slate-500 px-1.5 py-0.5 rounded border border-slate-200">#${tag}</span>`).join('')}
-                            </div>
-                        </div>
-                        <a href="${aid.link}" target="_blank" class="w-full text-center py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-lg text-sm transition-all flex items-center justify-center gap-2">
-                            Open Job Aid
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                        </a>
-                    `;
-                    resultsGrid.appendChild(card);
-                });
-            }
-        }
-
-        // Event Listeners
-        searchInput.addEventListener('input', renderResults);
-        categoryFilter.addEventListener('change', renderResults);
-        sortFilter.addEventListener('change', renderResults);
-
-        // Initial Load
-        window.onload = renderResults;
-    </script>
+// Keyboard shortcut: / to focus search
+document.addEventListener('keydown', function(e) {
+  if (e.key === '/' && document.activeElement !== searchInput) {
+    e.preventDefault();
+    searchInput.focus();
+    searchInput.select();
+  }
+  if (e.key === 'Escape') {
+    searchInput.value = '';
+    filterCards();
+    searchInput.blur();
+  }
+});
+</script>
 </body>
 </html>
